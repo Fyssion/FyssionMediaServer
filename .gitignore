@@ -1,0 +1,8 @@
+*.pyc
+venv/*
+
+server/static/uploads/*
+!server/static/uploads/.gitkeep
+
+conf/app.conf
+app.log

@@ -1,0 +1,51 @@
+<div class="card file-card" style="width: 18rem;">
+  <a id="img-{{ file.id }}" href="/{{ file.filename }}" class="file-image-parent card-img-top">
+    {% if file.filename.lower().split(".")[-1] in ("png", "jpg", "jpeg", "gif", "svg", "webp", "apng", "avif") %}
+      <img src="{{ file.filepath }}" class="file-image" alt="{{ file.filename }}">
+    {% elif file.filename.lower().split(".")[-1] in ("mp4", "webm") %}
+      <video width="250" height="250">
+       <source src="{{ file.filepath }}" type="video/{{ file.filename.lower().split(".")[-1] }}" />
+      </video>
+    {% else %}
+      <img src="{{ static_url("default_img.png") }}">
+    {% end %}
+</a>
+  <div class="card-body">
+    <h5 class="card-title">{{ file.filename }}</h5>
+    <p class="card-text">User: {{ file.user.username }}<br>
+    Uploaded: {{ locale.format_date(file.uploaded_at, full_format=True, shorter=True) }}</p>
+    <div class="dropdown">
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Actions
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <button class="dropdown-item" onclick="copyToClipboard('#img-{{ file.id }}')">Copy Link</button>
+        <a class="dropdown-item" href="/file/{{ file.id }}">View File Info</a>
+        {% if current_user == file.user or current_user.role.permissions.manage_files %}
+          <button type="button" class="dropdown-item text-danger" data-toggle="modal" data-target="#deleteModal">Delete File</a>
+        {% end %}
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+  <div class="modal-content">
+      <div class="modal-header">
+      <h5 class="modal-title" id="deleteModalLabel">Are you sure you want to delete this file?</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+      </button>
+      </div>
+      <div class="modal-body">
+      This action is irreversible.
+      </div>
+      <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      <form action="/file/{{ file.id }}/delete" method="POST">
+          <input class="btn btn-danger" type="submit" value="Delete">
+      </form>
+      </div>
+  </div>
+  </div>
+</div>

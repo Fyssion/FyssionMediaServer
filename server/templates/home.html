@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block body %}
+  {% if not files %}
+    <span>No files have been uploaded.</span>
+  {% else %}
+    <div class="row">
+    {% for file in files %}
+      <div class="col-auto mb-3">
+      {% module File(file) %}
+    </div>
+    {% end %}
+  </div>
+  {% end %}
+{% end %}

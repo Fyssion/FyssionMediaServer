@@ -1,0 +1,3 @@
+port=8080
+db_type="postgres"
+db_uri="postgresql://user:pass@localhost:5432/database"

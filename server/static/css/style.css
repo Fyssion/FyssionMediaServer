@@ -1,0 +1,29 @@
+html {
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+#content {
+  /*padding-top: 25px;
+  padding-left: 25px;
+  padding-right: 25px;*/
+  margin: 10px;
+}
+
+.file-image-parent {
+  height: 250px;
+  width: 250px;
+  margin: auto;
+}
+
+.file-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  margin: auto;
+}
+
+
+.file-card {
+  margin-bottom: 12px;
+}
