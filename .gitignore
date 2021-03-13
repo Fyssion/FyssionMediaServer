@@ -4,5 +4,5 @@ venv/*
 server/static/uploads/*
 !server/static/uploads/.gitkeep
 
-conf/app.conf
+server/conf/app.conf
 app.log
