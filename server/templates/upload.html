@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block body %}
+  <div class="container">
+    {% if error %}
+      <div class="alert alert-danger alert-dismissible show" role="alert">
+        <strong>Error:</strong> {{ error }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    {% end %}
+    <h1>Upload</h1>
+    <p>Upload a file.</p>
+    <form action="/upload" enctype="multipart/form-data" method="POST">
+      <fieldset>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <button type="submit" class="input-group-text">Upload</button>
+          </div>
+          <div class="custom-file">
+            <input type="file" class="custom-file-input" name="fileInput" id="fileInput">
+            <label class="custom-file-label" for="fileInput">Choose file</label>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+{% end %}

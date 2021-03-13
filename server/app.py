@@ -10,8 +10,10 @@ from .urls import handler_urls
 
 # General app options
 tornado.options.define("title", default="Fyssion Media Server", help="Title of the app", type=str)
+tornado.options.define("host", default="localhost", help="Host/domain of the app", type=str)
 tornado.options.define("port", default=8080, help="Run on the given port", type=int)
 tornado.options.define("debug", default=False, help="Enable/disable debug mode", type=bool)
+tornado.options.define("url_length", default=4, help="URL length for uploaded files", type=int)
 tornado.options.define("ssl_enabled", default=False, help="Enable/disable SSL", type=bool)
 tornado.options.define("cookie_secret", default="uhyoushouldprobablysetthis", help="The secure cookie secret", type=str)
 
@@ -44,10 +46,10 @@ class Application(tornado.web.Application):
             login_url="/login",
         )
 
-        super().__init__(handler_urls, **settings)
+        self.host = host = tornado.options.options.host
+        super().__init__(handler_urls, default_host=host, **settings)
 
-        self.url_length = 4  # TODO: add to config
-        self.domain = "localhost"  # TODO: add to config
+        self.url_length = tornado.options.options.url_length
 
         self.uploads_path = uploads_path = os.path.join(self.settings["static_path"], "uploads")
         if not os.path.isdir(uploads_path):

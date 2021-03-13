@@ -11,8 +11,8 @@ handler_urls = [
     (r"/profile", handlers.user.ProfileHandler),
 
     # Media viewer
-    (r"/file/(.*)", handlers.file.FileHandler),
     (r"/file/(.*)/delete", handlers.file.FileDeleteHandler),
+    (r"/file/(.*)", handlers.file.FileHandler),
 
 
     # Admin page

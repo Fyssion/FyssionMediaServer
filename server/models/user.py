@@ -76,3 +76,6 @@ class User(BaseModel):
         )
 
         return tornado.escape.to_unicode(hashed_password)
+
+    def __str__(self):
+        return self.username

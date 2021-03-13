@@ -188,6 +188,15 @@ class PostgresDatabase(Database):
                 """
         await self.pool.execute(query, file_id, filename, user_id)
 
+    async def delete_file(self, file_id):
+        query = """DELETE FROM files
+                   WHERE id=$1
+                   RETURNING 1;
+                """
+
+        succeeded = await self.pool.fetchval(query, file_id)
+        return bool(succeeded)
+
     async def get_role(self, role_id):
         """Gets a role by its role id."""
         query = "SELECT * FROM roles WHERE id=$1;"

@@ -1,6 +1,7 @@
 import tornado.web
 
 from .base import BaseHandler
+from server.models import File
 
 
 class HomeHandler(BaseHandler):
@@ -24,4 +25,14 @@ class FileModule(tornado.web.UIModule):
 class UploadHandler(BaseHandler):
     @tornado.web.authenticated
     async def get(self):
-        pass
+        self.render("upload.html", error=None)
+
+    @tornado.web.authenticated
+    async def post(self):
+        file_data = self.request.files.get("fileInput")[0]
+
+        if not file_data:
+            return
+
+        file = await File.upload_file(self.current_user, file_data, self.application)
+        self.redirect(f"/file/{file.id}")

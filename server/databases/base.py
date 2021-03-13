@@ -70,10 +70,11 @@ class Database:
         This does not include adding the file to the uploads folder."""
         pass
 
-    async def delete_file(self):
+    async def delete_file(self, file_id):
         """Deletes a file from the database.
 
-        This does not include deleting the file from the uploads folder."""
+        This does not include deleting the file from the uploads folder.
+        Returns whether or not the delete succeeded."""
         pass
 
     async def get_role(self, role_id):

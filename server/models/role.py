@@ -37,3 +37,6 @@ class Role(BaseModel):
         self.created_at = created_at
 
         return self
+
+    def __str__(self):
+        return self.name
