@@ -19,7 +19,7 @@ class BaseHandler(tornado.web.RequestHandler):
             exc = traceback.format_exception(*kwargs["exc_info"])
             self.render("errors/traceback.html", traceback=exc)
         else:
-            self.render("errors/any.html", code=status_code, reason=self._reason)
+            self.render("errors/any.html", code=status_code, message=self._reason)
 
     @property
     def db(self):
