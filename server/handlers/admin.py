@@ -40,6 +40,7 @@ class SettingsHandler(BaseHandler):
             roles = await self.db.get_roles()
 
             for user in users:
+                await user.get_files_uploaded()
                 await user.get_role()
 
             context.update({"users": users, "roles": roles})

@@ -29,6 +29,8 @@ class User(BaseModel):
         self.created_at = created_at
 
         self.role = None
+        self.files_uploaded = None
+        self.file_views = None
 
     @classmethod
     def partial(
@@ -81,6 +83,16 @@ class User(BaseModel):
         # Update attributes
         self.role_id = new_role_id
         self.role = None
+
+    async def get_files_uploaded(self):
+        """Returns the number of files uploaded."""
+        files_uploaded = self.files_uploaded = await self._state.db.get_file_count(user_id=self.id)
+        return files_uploaded
+
+    async def get_file_views(self):
+        """Returns the number of views from files uploaded."""
+        file_views = self.file_views = await self._state.db.get_total_views(user_id=self.id)
+        return file_views
 
     async def delete(self):
         """Deletes the user from the database, including all of the user's files."""

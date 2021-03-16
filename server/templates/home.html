@@ -1,12 +1,6 @@
 {% extends "base.html" %}
 
 {% block body %}
-  {% if not files %}
-    <div class="container">
-      <span>{% if tab=="all" %}No files have been uploaded.{% else %}You have not uploaded any files.{% end %}
-        <a href="/upload">Upload some</a> or <a href="/setup">setup ShareX</a>!</span>
-    </div>
-  {% else %}
     {% if current_user.role.permissions.manage_files %}
       <ul class="nav nav-tabs">
         <li class="nav-item">
@@ -17,6 +11,12 @@
         </li>
       </ul>
     {% end %}
+    {% if not files %}
+      <div class="container">
+        <span>{% if tab=="all" %}No files have been uploaded.{% else %}You have not uploaded any files.{% end %}
+          <a href="/upload">Upload some</a> or <a href="/setup">setup ShareX</a>!</span>
+      </div>
+    {% else %}
     <div class="row">
     {% for file in files %}
       <div class="col-auto mb-3">
