@@ -20,6 +20,7 @@
       <div class="col">
         <h4>User: {{ file.user }}</h4>
         <h4>Uploaded: {{ locale.format_date(file.uploaded_at, full_format=True) }}</h4>
+        <h4>Views: {{ file.views }}</h4>
         <button class="btn btn-primary" onclick="copyToClipboard('#img-{{ file.id }}')">Copy Link</button>
         {% if current_user == file.user or current_user.role.permissions.manage_files %}
           <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal-{{ file.id }}">Delete File</a>

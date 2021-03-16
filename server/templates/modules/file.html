@@ -13,7 +13,8 @@
   <div class="card-body">
     <h5 class="card-title">{{ file.filename }}</h5>
     <p class="card-text">User: {{ file.user.username }}<br>
-    Uploaded: {{ locale.format_date(file.uploaded_at, full_format=True, shorter=True) }}</p>
+    Uploaded: {{ locale.format_date(file.uploaded_at, full_format=True, shorter=True) }}<br>
+    Views: {{ file.views }}</p>
     <div class="dropdown">
       <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         Actions

@@ -13,7 +13,7 @@
     <h1>Account Settings</h1>
     <div class="list-group">
       <p class="list-group-item"><b>Username:</b> {{ current_user }}</p>
-      <p class="list-group-item"><b>Files uploaded:</b> {{ files_uploaded }}</p>
+      <p class="list-group-item">{{ files_uploaded }} files uploaded with {{ total_views }} views.</p>
       <p class="list-group-item"><b>Account Created:</b> {{ locale.format_date(current_user.created_at, full_format=True) }}</p>
     </div>
     <div class="jumbotron">

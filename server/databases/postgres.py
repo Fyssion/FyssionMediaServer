@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS files (
     filename TEXT NOT NULL,
 
     user_id INT NOT NULL REFERENCES users (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    views INT DEFAULT 0;
 
     uploaded_at TIMESTAMP DEFAULT (now() at time zone 'utc')
 );
@@ -210,6 +211,7 @@ class PostgresDatabase(Database):
             id=record["id"],
             filename=record["filename"],
             user_id=record["user_id"],
+            views=record["views"],
             uploaded_at=record["uploaded_at"],
             state=self.app,
             )
@@ -225,6 +227,7 @@ class PostgresDatabase(Database):
             id=record["id"],
             filename=record["filename"],
             user_id=record["user_id"],
+            views=record["views"],
             uploaded_at=record["uploaded_at"],
             state=self.app,
             )
@@ -246,6 +249,7 @@ class PostgresDatabase(Database):
                 id=record["id"],
                 filename=record["filename"],
                 user_id=record["user_id"],
+                views=record["views"],
                 uploaded_at=record["uploaded_at"],
                 state=self.app,
                 )
@@ -259,6 +263,22 @@ class PostgresDatabase(Database):
 
         else:
             query = "SELECT COUNT(*) FROM files;"
+            return await self.pool.fetchval(query)
+
+    async def increase_file_views(self, file_id):
+        query = """UPDATE files
+                   SET views = views + 1
+                   WHERE id=$1;
+                """
+        await self.pool.execute(query, file_id)
+
+    async def get_total_views(self, *, user_id=None):
+        if user_id:
+            query = "SELECT SUM(views) FROM files WHERE user_id=$1;;"
+            return await self.pool.fetchval(query, user_id)
+
+        else:
+            query = "SELECT SUM(views) FROM files;"
             return await self.pool.fetchval(query)
 
     async def upload_file(self, file_id, filename, user_id):

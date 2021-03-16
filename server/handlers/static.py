@@ -1,11 +1,18 @@
 import os.path
 
 import tornado.web
+import tornado.ioloop
 
 from .base import BaseHandler
 
 
 class UploadFileHandler(BaseHandler, tornado.web.StaticFileHandler):
+    async def increase_views(self, filename):
+        file = await self.db.get_file_by_id_or_filename(filename)
+
+        if file:
+            await file.increase_views()
+
     def find_matching_file(self, search):
         for filename in os.listdir(os.path.abspath(self.root)):
             name = filename.split(".")[0]
@@ -32,5 +39,7 @@ class UploadFileHandler(BaseHandler, tornado.web.StaticFileHandler):
         split_path = url_path.split(os.path.sep)[:-1]
         split_path.append(filename)
         url_path = os.path.sep.join(split_path)
+
+        tornado.ioloop.IOLoop.current().add_callback(self.increase_views, filename)
 
         return url_path

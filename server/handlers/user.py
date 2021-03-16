@@ -32,7 +32,8 @@ class LogoutHandler(BaseHandler):
 class ProfileHandler(BaseHandler):
     async def render_profile(self, *, message=None, data={}):
         files_uploaded = await self.db.get_file_count(user_id=self.current_user.id)
-        self.render("profile.html", files_uploaded=files_uploaded, message=message, data=data)
+        total_views = await self.db.get_total_views(user_id=self.current_user.id)
+        self.render("profile.html", files_uploaded=files_uploaded, total_views=total_views, message=message, data=data)
 
     @tornado.web.authenticated
     async def get(self):

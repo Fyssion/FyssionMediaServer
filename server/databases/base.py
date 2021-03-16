@@ -95,6 +95,14 @@ class Database:
         """Gets the number of files uploaded total or by a specific user."""
         pass
 
+    async def increase_file_views(self, file_id):
+        """Increases a file's view counter."""
+        pass
+
+    async def get_total_views(self, *, user_id=None):
+        """Gets the total number of views for all files for all files from a user."""
+        pass
+
     async def upload_file(self, file_id, filename, user_id):
         """Registers a file to the database.
 

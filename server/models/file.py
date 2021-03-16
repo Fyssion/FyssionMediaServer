@@ -16,6 +16,7 @@ class File(BaseModel):
         id,
         filename,
         user_id,
+        views,
         uploaded_at,
         **kwargs
     ):
@@ -24,6 +25,7 @@ class File(BaseModel):
         self.id = id
         self.filename = filename
         self.user_id = user_id
+        self.views=views
         self.uploaded_at = uploaded_at
 
         self.user = None
@@ -35,10 +37,11 @@ class File(BaseModel):
         id=None,
         filename=None,
         user_id=None,
+        views=None,
         uploaded_at=None,
         **kwargs
     ):
-        self = cls(id, filename, user_id, uploaded_at, **kwargs)
+        self = cls(id, filename, user_id, views, uploaded_at, **kwargs)
         return self
 
     @staticmethod
@@ -75,6 +78,7 @@ class File(BaseModel):
             id=file_id,
             filename=filename,
             user_id=user.id,
+            views=0,
             uploaded_at=datetime.datetime.utcnow(),
             state=state,
         )
@@ -101,6 +105,11 @@ class File(BaseModel):
         """Deletes this file from the database and removes the file from the folder."""
         await self._state.db.delete_file(self.id)
         await tornado.ioloop.IOLoop.current().run_in_executor(None, self._delete_file)
+
+    async def increase_views(self):
+        """Increases the view counter by one."""
+        await self._state.db.increase_file_views(self.id)
+        self.views += 1
 
     async def prefetch(self):
         """Fetch the User and the User's Role."""
