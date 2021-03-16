@@ -42,8 +42,8 @@ class Permissions(BaseFlags):
         return 1 << 2
 
     @flag_value
-    def edit_config(self):
-        """Whether the user can edit the server config."""
+    def edit_settings(self):
+        """Whether the user can edit the server settings."""
         return 1 << 3
 
     @flag_value

@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block settings-page %}
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createModal">Create Invite</button>
+
+  <table class="table dataTable">
+    <thread>
+      <tr>
+        <th>Invite</th>
+        <th>User</th>
+        <th>Uses</th>
+        <th>Max Uses</th>
+        <th>Expires</th>
+        <th>Actions</th>
+      </tr>
+    </thread>
+    <tbody>
+      {% for invite in invites %}
+        <tr>
+          <td><a id="invite-{{ invite.id }}" href="/invite/{{ invite.id }}">{{ invite.id }}</a></td>
+          <td>{{ invite.user }}</td>
+          <td>{{ invite.uses }}</td>
+          <td>{% if invite.max_uses %}{{ invite.max_uses }}{% else %}Unlimited{% end %}</td>
+          <td>{% if invite.expires_at %}{{ locale.format_date(invite.expires_at, full_format=True) }}{% else %}Never{% end %}</td>
+          <td>
+            <button type="button" class="btn btn-primary" onclick="copyToClipboard('#invite-{{ invite.id }}')">Copy Link</button>
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal" data-invite="{{ invite.id }}">Delete</button>
+          </td>
+        </tr>
+      {% end %}
+    </tbody>
+  </table>
+
+<div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+  <div class="modal-content">
+      <div class="modal-header">
+      <h5 class="modal-title" id="createModalLabel">Create Invite</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+      </button>
+      </div>
+      <form action="/settings?tab=invites&action=createInvite" method="POST">
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Max Uses:</label>
+              <select class="form-control" name="maxuses" id="maxuses">
+                  <option value="1">1 use</option>
+                  <option value="10">10 uses</option>
+                  <option value="100">100 uses</option>
+                  <option value="null">Infinite</option>
+              </select>
+          </div>
+          <div class="form-group">
+              <label>Expires in:</label>
+              <select class="form-control" name="expires" id="expires">
+                <option value="1800">30 minutes</option>
+                  <option value="3600">1 hour</option>
+                  <option value="43200">12 hours</option>
+                  <option value="86400">1 day</option>
+                  <option value="604800">1 week</option>
+                  <option value="null">Never</option>
+              </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <input class="btn btn-primary" type="submit" value="Submit">
+        </div>
+      </form>
+  </div>
+  </div>
+</div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+  <div class="modal-content">
+      <div class="modal-header">
+      <h5 class="modal-title" id="deleteModalLabel">Are you sure you want to delete invite?</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+      </button>
+      </div>
+      <div class="modal-body">
+      This action is irreversible.
+      </div>
+      <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      <form action="/settings?tab=invites&action=deleteInvite" method="POST">
+          <input type="hidden" id="invite" name="invite" value="to-be-set">
+          <input class="btn btn-danger" type="submit" value="Delete">
+      </form>
+      </div>
+  </div>
+  </div>
+</div>
+{% end %}
+
+{% block script %}
+<script type="text/javascript">
+  $('#deleteModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget) // Button that triggered the modal
+    var invite = button.data('invite')
+    var modal = $(this)
+    modal.find('.modal-title').text("Are you sure you want to delete invite " + invite + "?")
+    modal.find('#invite').val(invite)
+  })
+</script>
+{% end %}

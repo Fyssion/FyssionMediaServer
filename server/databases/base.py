@@ -52,6 +52,33 @@ class Database:
         """Gets a user from the database by their username."""
         pass
 
+    async def get_users(self):
+        """Gets all users from the database."""
+        pass
+
+    async def create_user(self, username, hashed_password, role_id):
+        """Creates a user and returns the user's ID."""
+        pass
+
+    async def delete_user(self, user_id):
+        """Deletes a user."""
+        pass
+
+    async def change_user_role(self, user_id, new_role_id):
+        """Change a user's role."""
+
+    async def reset_users_roles(self, role_id):
+        """Resets users' roles after a role has been deleted."""
+        pass
+
+    async def change_user_username(self, user_id, new_username):
+        """Changes a user's username."""
+        pass
+
+    async def change_user_password(self, user_id, hashed_password):
+        """Change a user's password."""
+        pass
+
     async def get_file(self, file_id):
         """Gets a File by its file id."""
         pass
@@ -61,7 +88,11 @@ class Database:
         pass
 
     async def get_files(self, *, user_id=None):
-        """Gets all files or all files uploaded by a specific user"""
+        """Gets all files or all files uploaded by a specific user."""
+        pass
+
+    async def get_file_count(self, *, user_id=None):
+        """Gets the number of files uploaded total or by a specific user."""
         pass
 
     async def upload_file(self, file_id, filename, user_id):
@@ -77,8 +108,16 @@ class Database:
         Returns whether or not the delete succeeded."""
         pass
 
+    async def delete_files(self, user_id):
+        """Deletes all files from a user and returns the filenames."""
+        pass
+
     async def get_role(self, role_id):
         """Gets a role by its role id."""
+        pass
+
+    async def get_roles(self):
+        """Gets all roles from the database."""
         pass
 
     async def create_role(self, name, permissions):
@@ -87,4 +126,31 @@ class Database:
 
     async def delete_role(self, role_id):
         """Deletes a role from the database."""
+        pass
+
+    async def change_role_name(self, role_id, new_name):
+        """Changes a role's name."""
+        pass
+
+    async def change_role_permissions(self, role_id, new_permissions):
+        """Changes a role's permissions."""
+        pass
+
+    async def get_invite(self, invite):
+        """Gets an invite from the database."""
+        pass
+
+    async def get_invites(self):
+        """Gets all invites from the database."""
+        pass
+
+    async def create_invite(self, invite, user_id, max_uses, expires_at):
+        """Creates an invite."""
+        pass
+
+    async def delete_invite(self, invite):
+        """Deletes an invite."""
+        pass
+
+    async def increase_invite_uses(self, invite):
         pass

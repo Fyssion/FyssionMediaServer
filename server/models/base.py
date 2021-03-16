@@ -3,6 +3,7 @@ class BaseModel:
 
     def __init__(self, *, state):
         self._state = state
+        self.id = None
 
     @classmethod
     def partial(self):

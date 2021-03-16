@@ -13,6 +13,7 @@ tornado.options.define("title", default="Fyssion Media Server", help="Title of t
 tornado.options.define("host", default="localhost", help="Host/domain of the app", type=str)
 tornado.options.define("port", default=8080, help="Run on the given port", type=int)
 tornado.options.define("debug", default=False, help="Enable/disable debug mode", type=bool)
+tornado.options.define("domain_override", default=None, help="Override the host:port combo with a domain", type=str)
 tornado.options.define("url_length", default=4, help="URL length for uploaded files", type=int)
 tornado.options.define("ssl_enabled", default=False, help="Enable/disable SSL", type=bool)
 tornado.options.define("cookie_secret", default="uhyoushouldprobablysetthis", help="The secure cookie secret", type=str)
@@ -55,3 +56,16 @@ class Application(tornado.web.Application):
         if not os.path.isdir(uploads_path):
             log.info("Uploads folder not found, creating...")
             os.mkdir(uploads_path)
+
+    @property
+    def url(self):
+        """Returns the URL for the application."""
+        protocall = "https" if tornado.options.options.ssl_enabled else "http"
+
+        if tornado.options.options.domain_override:
+            return f"{protocall}://{tornado.options.options.domain_override}"
+
+        port = tornado.options.options.port
+        port = f":{port}" if port not in (80, 443) else ""
+
+        return f"{protocall}://{tornado.options.options.host}:{port}"

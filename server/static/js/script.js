@@ -5,3 +5,11 @@ function copyToClipboard(element) {
   document.execCommand("copy");
   $temp.remove();
 }
+
+function show_success(message) {
+  var dialog = bootbox.dialog({
+    message: message,
+    className: 'modal modal-success fade-in',
+    okButton: false
+  });
+}

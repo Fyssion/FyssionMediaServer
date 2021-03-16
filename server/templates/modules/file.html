@@ -1,13 +1,13 @@
 <div class="card file-card" style="width: 18rem;">
   <a id="img-{{ file.id }}" href="/{{ file.filename }}" class="file-image-parent card-img-top">
     {% if file.filename.lower().split(".")[-1] in ("png", "jpg", "jpeg", "gif", "svg", "webp", "apng", "avif") %}
-      <img src="{{ file.filepath }}" class="file-image" alt="{{ file.filename }}">
+      <img src="/{{ file.filepath }}" class="file-image" alt="{{ file.filename }}">
     {% elif file.filename.lower().split(".")[-1] in ("mp4", "webm") %}
       <video width="250" height="250">
-       <source src="{{ file.filepath }}" type="video/{{ file.filename.lower().split(".")[-1] }}" />
+       <source src="/{{ file.filepath }}" type="video/{{ file.filename.lower().split(".")[-1] }}" />
       </video>
     {% else %}
-      <img src="{{ static_url("default_img.png") }}">
+      <img src="{{ static_url("default_img.png") }}" class="img-fluid" style="max-height: 30rem;" alt="{{ file.filename }}">
     {% end %}
 </a>
   <div class="card-body">

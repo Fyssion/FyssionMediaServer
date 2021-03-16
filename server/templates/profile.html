@@ -2,29 +2,92 @@
 
 {% block body %}
   <div class="container">
-    {% if error %}
-      <div class="alert alert-danger alert-dismissible show" role="alert">
-        <strong>Error:</strong> {{ error }}
+    {% if message %}
+      <div class="alert alert-{{ message[0] }} alert-dismissible show" role="alert">
+        {{ message[1] }}
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
     {% end %}
-    <h1>TODO: this page</h1>
-    <!-- <h1>Login</h1>
-    <form action="/profile" method="POST">
-      <fieldset>
-        <div class="form-group">
-          <label for="usernameInputLabel">Username</label>
-          <input type="text" class="form-control" name="username" id="usernameInput" aria-describedby="usernameHelp" placeholder="Enter username">
-          <small id="usernameHelp" class="form-text text-muted">Want an account? Contact Fyssion.</small>
-        </div>
-        <div class="form-group">
-          <label for="passwordInputLabel">Password</label>
-          <input type="password" class="form-control" name="password" id="passwordInput" placeholder="Enter password">
-        </div>
-        <button type="submit" class="btn btn-primary">Update Account</button>
-      </fieldset>
-    </form> -->
+    <h1>Account Settings</h1>
+    <div class="list-group">
+      <p class="list-group-item"><b>Username:</b> {{ current_user }}</p>
+      <p class="list-group-item"><b>Files uploaded:</b> {{ files_uploaded }}</p>
+      <p class="list-group-item"><b>Account Created:</b> {{ locale.format_date(current_user.created_at, full_format=True) }}</p>
+    </div>
+    <div class="jumbotron">
+      <h2>Change Username</h2>
+      <form action="/profile?action=changeUsername" method="POST">
+        <fieldset>
+          <div class="form-group">
+            <label for="usernameInputLabel">Username</label>
+          <input type="text" class="form-control {% if data.get("username_exists_error") %}is-invalid{% end %}" name="username" id="usernameInput" placeholder="Enter a username" {% if data.get("username") %}value="{{ data.get("username") }}"{% end %}>
+          {% if data.get("username_exists_error") %}
+            <div class="invalid-feedback">That username is taken.</div>
+          {% end %}
+          </div>
+          <div class="form-group">
+            <label for="passwordInputLabel">Password</label>
+            <input type="password" class="form-control {% if data.get("changeusername_incorrect_pass") %}is-invalid{% end %}" name="password" id="confirmPasswordInput" placeholder="Confirm password">
+            {% if data.get("changeusername_incorrect_pass") %}
+              <div class="invalid-feedback">Incorrect password.</div>
+            {% end %}
+          </div>
+          <button type="submit" class="btn btn-primary">Update Username</button>
+        </fieldset>
+      </form>
+    </div>
+    <div class="jumbotron">
+      <h2>Change Password</h2>
+      <form action="/profile?action=changePassword" method="POST">
+        <fieldset>
+          <div class="form-group">
+            <label for="usernameInputLabel">Old Password</label>
+            <input type="password" class="form-control {% if data.get("changepassword_incorrect_pass") %}is-invalid{% end %}" name="oldPassword" id="oldPasswordInput" placeholder="Enter old password">
+            {% if data.get("changepassword_incorrect_pass") %}
+              <div class="invalid-feedback">Incorrect password.</div>
+            {% end %}
+          </div>
+          <div class="form-group">
+            <label for="passwordInputLabel">New Password</label>
+            <input type="password" class="form-control" name="newPassword" id="newPasswordInput" placeholder="Enter new password">
+            <label for="passwordInputLabel">Confirm Password</label>
+            <input type="password" class="form-control {% if data.get("pass_not_match") %}is-invalid{% end %}" name="confirmPassword" id="confirmPasswordInput" placeholder="Confirm password">
+            {% if data.get("pass_not_match") %}
+              <div class="invalid-feedback">Passwords do not match.</div>
+            {% end %}
+          </div>
+          <button type="submit" class="btn btn-primary">Update Password</button>
+        </fieldset>
+      </form>
+    </div>
+    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal" {% if current_user.id == 1 %}disabled{% end %}>Delete Account</a>
   </div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+  <div class="modal-content">
+      <div class="modal-header">
+      <h5 class="modal-title" id="deleteModalLabel">Are you sure you want to delete your account?</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+      </button>
+      </div>
+      <form action="/profile?action=deleteAccount" method="POST">
+        <div class="modal-body">
+          This action will delete all your uploaded files and is not reversible.<br>
+          Enter your username to confim account deletion.
+          <div class="form-group">
+            <input type="text" class="form-control" id="username" name="username" placeholder="{{ current_user }}">
+          </div>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <input class="btn btn-primary" type="submit" value="Delete Account">
+        </div>
+      </form>
+  </div>
+  </div>
+</div>
 {% end %}

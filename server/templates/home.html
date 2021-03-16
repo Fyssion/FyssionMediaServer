@@ -2,8 +2,21 @@
 
 {% block body %}
   {% if not files %}
-    <span>No files have been uploaded.</span>
+    <div class="container">
+      <span>{% if tab=="all" %}No files have been uploaded.{% else %}You have not uploaded any files.{% end %}
+        <a href="/upload">Upload some</a> or <a href="/setup">setup ShareX</a>!</span>
+    </div>
   {% else %}
+    {% if current_user.role.permissions.manage_files %}
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link{% if not tab %} active{% end %}" href="/">Your Files</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link{% if tab=="all" %} active{% end %}" href="?tab=all">All Files</a>
+        </li>
+      </ul>
+    {% end %}
     <div class="row">
     {% for file in files %}
       <div class="col-auto mb-3">

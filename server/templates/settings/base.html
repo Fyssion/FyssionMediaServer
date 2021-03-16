@@ -1,0 +1,31 @@
+{% extends "../base.html" %}
+
+{% block body %}
+  <div class="container">
+    {% if message %}
+      <div class="alert alert-{{ message[0] }} alert-dismissible show" role="alert">
+        <strong>Error:</strong> {{ message[1] }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    {% end %}
+    <h1>Settings</h1>
+    <ul class="nav nav-tabs">
+      {% if current_user.role.permissions.edit_settings %}
+        <li class="nav-item">
+          <a class="nav-link{% if tab=="users" %} active{% end %}" href="?tab=users">Users</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link{% if tab=="roles" %} active{% end %}" href="?tab=roles">Roles</a>
+        </li>
+      {% end %}
+      {% if current_user.role.permissions.manage_invites %}
+        <li class="nav-item">
+          <a class="nav-link{% if tab=="invites" %} active{% end %}" href="?tab=invites">Invites</a>
+        </li>
+      {% end %}
+    </ul>
+    {% block settings-page %}{% end %}
+  </div>
+{% end %}

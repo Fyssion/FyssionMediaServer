@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block body %}
+  <div class="container">
+    {% if created %}
+      <h1>Success!</h1>
+      <p>Your account has been created.</p>
+      <h2>What's next?</h2>
+    {% else %}
+    <h1>Setup Your Client</h1>
+    {% end %}
+    <p>This media server was designed to work with ShareX, a screen capture and file sharing tool for Windows.</p>
+    <a class="btn btn-primary" href="https://getsharex.com" target="_blank">Download ShareX</a>
+    <p>Next, download the ShareX setup file for this media server.</p>
+    <p>When you open this file, ShareX will register this media server to your uploaders.</p>
+    <form action="/api/downloads?client=sharex" method="POST">
+      <fieldset>
+        <div class="form-group">
+          <input type="hidden" class="form-control" name="username" value="{{ current_user.username }}">
+          <input type="hidden" class="form-control" name="password" value="{{ password }}">
+          <button type="submit" class="btn btn-primary">Download ShareX Setup File</button>
+      </fieldset>
+    </form>
+
+    <h2>Don't want ShareX?</h2>
+    <p>You can also upload files through the upload page.</p>
+    <a class="btn btn-primary" href="/upload" target="_blank">Start Uploading</a>
+  </div>
+{% end %}

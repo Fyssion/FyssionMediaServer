@@ -1,4 +1,6 @@
 import bcrypt
+import datetime
+import os.path
 
 import tornado.escape
 import tornado.ioloop
@@ -43,18 +45,58 @@ class User(BaseModel):
 
         return self
 
+    @classmethod
+    async def create(cls, username, password, state):
+        """Creates the user in the database."""
+        role_id = 3  # default
+        hashed_password = await cls.hash_password(password)
+
+        user_id = await state.db.create_user(username, hashed_password, role_id)
+
+        return cls(
+            id=user_id,
+            username=username,
+            hashed_password=hashed_password,
+            role_id=role_id,
+            created_at=datetime.datetime.utcnow(),
+            state=state,
+        )
+
     async def get_role(self):
         """Returns the user's Role."""
         role = self.role = await self._state.db.get_role(self.role_id)
         return role
 
-    async def create(self):
-        """Creates the user in the database."""
-        self.id = await self._state.db.create_user(self)
+    async def change_role(self, new_role_id):
+        """Changes a user's role"""
+        await self._state.db.change_user_role(self.id, new_role_id)
+
+        # Update attributes
+        self.role_id = new_role_id
+        self.role = None
 
     async def delete(self):
-        """Deletes the user from the database."""
+        """Deletes the user from the database, including all of the user's files."""
+        filenames = await self._state.db.delete_files(self.id)
         await self._state.db.delete_user(self.id)
+
+        for filename in filenames:
+            fullpath = os.path.join(self._state.uploads_path, filename)
+            try:
+                await tornado.ioloop.IOLoop.current().run_in_executor(None, os.remove, fullpath)
+            except Exception:
+                pass
+
+    async def change_username(self, new_username):
+        """Changes the user's username."""
+        await self._state.db.change_user_username(self.id, new_username)
+        self.username = new_username
+
+    async def change_password(self, new_password):
+        """Changes the user's password."""
+        hashed_password = await User.hash_password(new_password)
+        await self._state.db.change_user_password(self.id, hashed_password)
+        self.hash_password = hashed_password
 
     async def check_password(self, password):
         """Returns whether a password matches this user's hashed password."""

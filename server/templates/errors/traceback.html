@@ -3,7 +3,10 @@
 {% block body %}
   <div class="container">
     <h1 style="font-size:100px;">:(</h1>
-    <h1>404: Not Found</h1>
-    <p>The page or file you were looking for was not found.</p>
+    <h1>An Error Occurred</h1>
+    <pre><code>
+        {% for line in traceback %}
+        {{ line }}{% end %}
+    </code></pre>
   </div>
 {% end %}
