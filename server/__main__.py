@@ -84,6 +84,7 @@ def stop_handler(*args, **kwargs):
 
 signal.signal(signal.SIGTERM, stop_handler)
 signal.signal(signal.SIGINT, stop_handler)
+signal.signal(signal.SIGBREAK, stop_handler)
 
 
 tornado.ioloop.IOLoop.current().add_callback(main)
