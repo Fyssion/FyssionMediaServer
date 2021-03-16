@@ -85,11 +85,6 @@ def stop_handler(*args, **kwargs):
 signal.signal(signal.SIGTERM, stop_handler)
 signal.signal(signal.SIGINT, stop_handler)
 
-if os.name == "nt":
-    signal.signal(signal.SIGBREAK, stop_handler)
-elif os.name == "posix":
-    signal.signal(signal.SIGKILL, stop_handler)
-
 
 tornado.ioloop.IOLoop.current().add_callback(main)
 tornado.ioloop.IOLoop.current().start()
