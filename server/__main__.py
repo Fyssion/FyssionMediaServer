@@ -62,7 +62,8 @@ async def main():
 
             log.info(f"Your new admin username is Admin and your password is {password}.")
 
-        app.listen(options.port)
+        http_server = tornado.httpserver.HTTPServer(app)
+        http_server.listen(8080)
 
         log.info("Ready to go.")
 
