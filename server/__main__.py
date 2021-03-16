@@ -4,6 +4,7 @@ import random
 import os.path
 import signal
 import string
+import time
 
 import tornado.httpserver
 import tornado.ioloop
@@ -62,6 +63,8 @@ async def main():
 
             log.info(f"Your new admin username is Admin and your password is {password}.")
 
+        global http_server
+
         http_server = tornado.httpserver.HTTPServer(app)
         http_server.listen(options.port)
 
@@ -71,20 +74,36 @@ async def main():
 
 
 shutdown_event = tornado.locks.Event()
+MAX_WAIT_SECONDS = 3
 
 
-def stop_handler(*args, **kwargs):
-    async def shutdown():
-        log.info("Closing app...")
-        shutdown_event.set()
-        await asyncio.sleep(0.5)
-        tornado.ioloop.IOLoop.current().stop()
-        log.info("All done.")
-    tornado.ioloop.IOLoop.current().add_callback(shutdown)
+def shutdown():
+    log.info("Shutting down...")
+    http_server.stop()
+    shutdown_event.set()
+
+    io_loop = tornado.ioloop.IOLoop.instance()
+
+    deadline = time.time() + MAX_WAIT_SECONDS
+
+    def stop_loop():
+        now = time.time()
+        if now < deadline and (asyncio.all_tasks()):
+            log.info("Waiting for tasks to complete...")
+            io_loop.add_timeout(now + 1, stop_loop)
+        else:
+            io_loop.stop()
+            log.info("Shutdown complete.")
+    stop_loop()
 
 
-signal.signal(signal.SIGTERM, stop_handler)
-signal.signal(signal.SIGINT, stop_handler)
+def sig_handler(sig, frame):
+    log.warning(f"Caught signal: {sig}")
+    tornado.ioloop.IOLoop.current().add_callback_from_signal(shutdown)
+
+
+signal.signal(signal.SIGTERM, sig_handler)
+signal.signal(signal.SIGINT, sig_handler)
 
 
 tornado.ioloop.IOLoop.current().add_callback(main)
