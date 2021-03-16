@@ -41,7 +41,14 @@ class User(BaseModel):
         created_at=None,
         **kwargs
     ):
-        self = cls(id, username, hashed_password, role_id, created_at, **kwargs)
+        self = cls(
+            id=id,
+            username=username,
+            hashed_password=hashed_password,
+            role_id=role_id,
+            created_at=created_at,
+            **kwargs
+        )
 
         return self
 

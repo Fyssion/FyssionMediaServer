@@ -31,12 +31,7 @@ class Role(BaseModel):
         created_at=None,
         **kwargs
     ):
-        self = cls(**kwargs)
-
-        self.id = id
-        self.name = name
-        self.permissions = permissions
-        self.created_at = created_at
+        self = cls(name=name, permissions=permissions, created_at=created_at, **kwargs)
 
         return self
 

@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS files (
     filename TEXT NOT NULL,
 
     user_id INT NOT NULL REFERENCES users (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
-    views INT DEFAULT 0;
+    views INT DEFAULT 0,
 
     uploaded_at TIMESTAMP DEFAULT (now() at time zone 'utc')
 );

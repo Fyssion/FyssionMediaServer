@@ -37,37 +37,36 @@ async def main():
     log.info("Connecting to database...")
 
     async with Database() as db:
+        app = Application(db)
+        db.app = app
+
         if not await db.is_initialized():
             log.info("Database not initialized, creating roles and Admin user...")
 
             roles = []
-            roles.append(Role.partial(name="Admin", permissions=Permissions.all()))
+            roles.append(Role.partial(name="Admin", permissions=Permissions.all(), state=app))
 
             permissions = Permissions.default()
             permissions.manage_files = True
             permissions.manage_invites = True
-            roles.append(Role.partial(name="Trusted", permissions=permissions))
+            roles.append(Role.partial(name="Trusted", permissions=permissions, state=app))
 
-            roles.append(Role.partial(name="User", permissions=Permissions.default()))
+            roles.append(Role.partial(name="User", permissions=Permissions.default(), state=app))
 
             available_chars = string.ascii_letters + string.digits
             password = "".join(random.choice(available_chars) for i in range(5))
             hashed_password = await User.hash_password(password)
-            user = User.partial(username="Admin", hashed_password=hashed_password, role_id=None)
+            user = User.partial(username="Admin", hashed_password=hashed_password, role_id=None, state=app)
 
             await db.initialize(roles, user)
 
             log.info(f"Your new admin username is Admin and your password is {password}.")
 
-        app = Application(db)
-        db.app = app
         app.listen(options.port)
 
         log.info("Ready to go.")
 
         await shutdown_event.wait()
-
-        log.info("Closing app...")
 
 
 shutdown_event = tornado.locks.Event()
@@ -75,6 +74,7 @@ shutdown_event = tornado.locks.Event()
 
 def stop_handler(*args, **kwargs):
     async def shutdown():
+        log.info("Closing app...")
         shutdown_event.set()
         await asyncio.sleep(0.5)
         tornado.ioloop.IOLoop.current().stop()
