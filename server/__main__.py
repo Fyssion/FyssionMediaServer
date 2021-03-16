@@ -5,7 +5,6 @@ import os.path
 import signal
 import string
 
-import colorama
 import tornado.httpserver
 import tornado.ioloop
 import tornado.locks
@@ -19,7 +18,6 @@ from .models import Role, User, Permissions
 
 APP_ROOT = os.path.dirname(__file__)
 
-colorama.init()
 log = logging.getLogger("app")
 
 
