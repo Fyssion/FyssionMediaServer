@@ -1,8 +1,44 @@
 {% if pages > 1 %}
 <nav>
   <ul class="pagination justify-content-center">
-    <li {% if previous %}><a class="page-link" href="{{ get_page_url(previous) }}">&laquo;</a>{% else %} class="page-item disabled"><span class="page-link disabled">&laquo;</span></li>{% end %}  
-    {% for page_num in range(1, pages + 1) %}{# 1-index range #}
+    {% if page > 1 and pages > 3 %}
+      <li class="page-item">
+        <a href="{{ get_page_url(1) }}" class="page-link">1</a>
+      </li>
+
+      <li class="page-item disabled">
+        <span class="page-link disabled">...</span>
+      </li>
+    {% end %}
+
+    {% if previous %}
+      <li class="page-item">
+        <a href="{{ get_page_url(previous) }}" class="page-link">{{ previous }}</a>
+      </li>
+    {% end %}
+
+    <li class="page-item disabled">
+      <span class="page-link disabled">{{ page }}</span>
+    </li>
+
+    {% if next %}
+      <li class="page-item">
+        <a href="{{ get_page_url(next) }}" class="page-link">{{ next }}</a>
+      </li>
+    {% end %}
+
+    {% if page < pages and pages > 3 %}
+      <li class="page-item disabled">
+        <span class="page-link disabled">...</span>
+      </li>
+
+      <li class="page-item">
+        <a href="{{ get_page_url(pages) }}" class="page-link">{{ pages }}</a>
+      </li>
+    {% end %}
+
+    <!-- <li {% if previous %}><a class="page-link" href="{{ get_page_url(previous) }}">&laquo;</a>{% else %} class="page-item disabled"><span class="page-link disabled">&laquo;</span></li>{% end %}  
+    {% for page_num in range(page-1 or 1, pages+1) %}{# 1-index range #}
     <li {% if page_num != page %}>
       <a class="page-link" href="{{ get_page_url(page_num) }}">{{ page_num }}</a>
       {% else %} class="page-item active"><span class="page-link">{{ page_num }}</span>
@@ -10,7 +46,7 @@
     {% end %}
     <li {% if next %}>
       <a class="page-link" href="{{ get_page_url(next) }}">&raquo;</a>{% else %} class="page-item disabled"><span class="page-link disabled">&raquo;</span>
-    </li>{% end %}  
+    </li>{% end %} -->
   </ul>
 </nav>
 {% end %}

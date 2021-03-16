@@ -25,7 +25,7 @@ class HomeHandler(BaseHandler):
 
         page = self.get_argument("page", 1)
         page = int(page)
-        per_page = 25
+        per_page = 12
 
         if not tab:
             files = await self.db.get_files(user_id=self.current_user.id)
