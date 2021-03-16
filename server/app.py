@@ -42,7 +42,7 @@ class Application(tornado.web.Application):
             static_path=os.path.join(os.path.dirname(__file__), "static"),
             default_handler_class=handlers.errors.NotFoundHandler,
             autoreload=False,
-            ui_modules={"File": handlers.home.FileModule},
+            ui_modules={"File": handlers.home.FileModule, "Paginator": handlers.home.Paginator},
             # xsrf_cookies=True,
             cookie_secret=tornado.options.options.cookie_secret,
             login_url="/login",

@@ -1,0 +1,16 @@
+{% if pages > 1 %}
+<nav>
+  <ul class="pagination justify-content-center">
+    <li {% if previous %}><a class="page-link" href="{{ get_page_url(previous) }}">&laquo;</a>{% else %} class="page-item disabled"><span class="page-link disabled">&laquo;</span></li>{% end %}  
+    {% for page_num in range(1, pages + 1) %}{# 1-index range #}
+    <li {% if page_num != page %}>
+      <a class="page-link" href="{{ get_page_url(page_num) }}">{{ page_num }}</a>
+      {% else %} class="page-item active"><span class="page-link">{{ page_num }}</span>
+    </li>{% end %}
+    {% end %}
+    <li {% if next %}>
+      <a class="page-link" href="{{ get_page_url(next) }}">&raquo;</a>{% else %} class="page-item disabled"><span class="page-link disabled">&raquo;</span>
+    </li>{% end %}  
+  </ul>
+</nav>
+{% end %}
