@@ -75,8 +75,10 @@ class SignupHandler(BaseHandler):
 
 
 class SetupHandler(BaseHandler):
+    @tornado.web.authenticated
     async def get(self):
         self.render("confirm_password.html")
 
+    @tornado.web.authenticated
     async def post(self):
         self.render("setup.html", created=False, password=self.get_body_argument("password"))
