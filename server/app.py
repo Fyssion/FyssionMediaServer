@@ -16,6 +16,7 @@ tornado.options.define("debug", default=False, help="Enable/disable debug mode",
 tornado.options.define("domain_override", default=None, help="Override the host:port combo with a domain", type=str)
 tornado.options.define("url_length", default=4, help="URL length for uploaded files", type=int)
 tornado.options.define("ssl_enabled", default=False, help="Enable/disable SSL", type=bool)
+tornado.options.define("ssl_override", default=False, help="Override https instead of http for domain", type=bool)
 tornado.options.define("cookie_secret", default="uhyoushouldprobablysetthis", help="The secure cookie secret", type=str)
 
 # Database options
@@ -60,12 +61,13 @@ class Application(tornado.web.Application):
     @property
     def url(self):
         """Returns the URL for the application."""
-        protocall = "https" if tornado.options.options.ssl_enabled else "http"
+        options = tornado.options.options
+        protocall = "https" if options.ssl_enabled or options.ssl_override else "http"
 
-        if tornado.options.options.domain_override:
-            return f"{protocall}://{tornado.options.options.domain_override}"
+        if options.domain_override:
+            return f"{protocall}://{options.domain_override}"
 
-        port = tornado.options.options.port
+        port = options.port
         port = f":{port}" if port not in (80, 443) else ""
 
-        return f"{protocall}://{tornado.options.options.host}:{port}"
+        return f"{protocall}://{options.host}:{port}"
