@@ -1,5 +1,6 @@
 import datetime
 
+import tornado.ioloop
 import tornado.web
 
 from .base import BaseHandler
@@ -66,8 +67,17 @@ class SettingsHandler(BaseHandler):
         elif tab == "invites":
             invites = await self.db.get_invites()
 
-            for invite in invites:
+            to_remove = []
+
+            for i, invite in enumerate(invites):
+                if not invite.is_valid():
+                    tornado.ioloop.IOLoop.current().add_callback(invite.delete)
+                    to_remove.append(i)
+
                 await invite.get_user()
+
+            for i in to_remove:
+                invites.pop(i)
 
             context["invites"] = invites
 
