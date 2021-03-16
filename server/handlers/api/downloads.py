@@ -27,7 +27,7 @@ class DownloadsHandler(APIHandler):
         username = self.get_body_argument("username", "ENTER_USERNAME_HERE")
         password = self.get_body_argument("password", "ENTER_PASSWORD_HERE")
 
-        url = f"{self.request.protocol}://{self.request.host}"
+        url = self.application.url
 
         if client == "sharex":
             text = SXCU_FILE.format(url=url, username=username, password=password)
